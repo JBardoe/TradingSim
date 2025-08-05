@@ -1,11 +1,12 @@
-from flask import Flask, jsonify, request, redirect, session
+from flask import Flask, jsonify, request, redirect, session, send_from_directory
 from flask_login import login_user, LoginManager, current_user, logout_user, login_required
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug import security
 from db_schema import db, User, add_user, dbinit
+import os
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder="build", static_url_path="/")
 app.secret_key = "secretKey"
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///tradingsim.sqlite'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -26,6 +27,7 @@ def unauthorised_callback():
 @app.errorhandler(Exception)
 def handle_error(e):
     return jsonify(message="An unexpected error has occurred")
+
 
 @app.route("/api/login", methods=['POST'])
 def login():
@@ -56,6 +58,14 @@ def register():
     login_user(User.query.filter_by(email=email).first())
     
     return jsonify("Registration Successful", success=True)
+
+@app.route('/')
+@app.route('/<path:path>')
+def serve_react(path=''):
+    if path != "" and os.path.exists(os.path.join(app.static_folder, path)):
+        return send_from_directory(app.static_folder, path)
+    else:
+        return send_from_directory(app.static_folder, 'index.html')
 
 if __name__ == '__main__':
     app.run(debug=True)
