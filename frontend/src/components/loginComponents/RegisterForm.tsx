@@ -138,7 +138,12 @@ const RegisterForm = () => {
 								required
 								autoComplete="current-password"
 								onChange={() => setInvalidPassword(false)}
-								className="block w-full rounded-md bg-white dark:bg-white/5 px-3 py-1.5 text-base outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 dark:outline-white/10 dark:placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 dark:focus:outline-indigo-500 sm:text-sm/6"
+								className={
+									(invalidEmail
+										? "outline-red-300 dark:outline-red-300 focus:outline-red-600 dark:focus:outline-red-500"
+										: "outline-gray-300 dark:outline-white/10 focus:outline-indigo-600 dark:focus:outline-indigo-500") +
+									baseInputClasses
+								}
 							/>
 							{invalidPassword && (
 								<p className="text-sm font-semibold text-red-500 text-center mt-1">
@@ -167,7 +172,12 @@ const RegisterForm = () => {
 								required
 								autoComplete="current-password"
 								onChange={() => setPasswordMatch(true)}
-								className="block w-full rounded-md bg-white dark:bg-white/5 px-3 py-1.5 text-base outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 dark:outline-white/10 dark:placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 dark:focus:outline-indigo-500 sm:text-sm/6"
+								className={
+									(!passwordMatch
+										? "outline-red-300 dark:outline-red-300 focus:outline-red-600 dark:focus:outline-red-500"
+										: "outline-gray-300 dark:outline-white/10 focus:outline-indigo-600 dark:focus:outline-indigo-500") +
+									baseInputClasses
+								}
 							/>
 							{!passwordMatch && (
 								<p className="text-sm font-semibold text-red-500 text-center mt-1">

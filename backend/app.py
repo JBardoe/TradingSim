@@ -31,18 +31,17 @@ def handle_error(e):
 
 @app.route("/api/login", methods=['POST'])
 def login():
-	if not ("password" in request.form and "username" in request.form): #Should never trigger
-		return jsonify(message="Invalid form submission", success=False)
+	json = request.form.json()
 
-	user = User.query.filter_by(email = request.form.get("email")).first()
+	user = User.query.filter_by(email = json.get("email")).first()
 
 	if not user:
-		return jsonify(message="Unknown User", success=False)
-	elif not security.check_password_hash(user.password, request.form.get("password")):
-		return jsonify(message="Incorrect Username or Password", success=False)
+		return make_response(jsonify(message="Unknown User"), 401)
+	elif not security.check_password_hash(user.password, json.get("password")):
+		return make_response(jsonify(message="Incorrect Username or Password"), 401)
 
 	login_user(user)
-	return jsonify(message="Login Successful", success=True)
+	return make_response(jsonify(message="Login Successful"), 200)
 
 @app.route("/api/register", methods=['POST'])
 def register():  

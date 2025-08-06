@@ -1,4 +1,47 @@
+import { useState } from "react";
+import { redirect } from "react-router-dom";
+
+interface loginFormData {
+	email: HTMLInputElement;
+	password: HTMLInputElement;
+}
+
 const LoginForm = () => {
+	const [loginFailed, setLoginFailed] = useState(false);
+
+	const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+		event.preventDefault();
+		setLoginFailed(false);
+		const form = event.currentTarget;
+		const formElements = form.elements as typeof form.elements &
+			loginFormData;
+
+		sendData(
+			JSON.stringify({
+				email: formElements.email.value,
+				password: formElements.password.value,
+			})
+		);
+	};
+
+	const sendData = async (data: string) => {
+		const resp = await fetch("/api/register", {
+			method: "POST",
+			mode: "cors",
+			cache: "no-cache",
+			credentials: "same-origin",
+			headers: { "Content-Types": "application/json" },
+			redirect: "follow",
+			referrerPolicy: "no-referrer",
+			body: data,
+		});
+
+		if (resp.status !== 200) {
+			setLoginFailed(true);
+		} else {
+			redirect("/");
+		}
+	};
 	return (
 		<div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
 			<div className="sm:mx-auto sm:w-full sm:max-w-sm">
@@ -13,7 +56,7 @@ const LoginForm = () => {
 			</div>
 
 			<div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-				<form action="/api/login" method="POST" className="space-y-6">
+				<form onSubmit={handleSubmit} className="space-y-6">
 					<div>
 						<label
 							htmlFor="email"
@@ -61,6 +104,12 @@ const LoginForm = () => {
 							/>
 						</div>
 					</div>
+
+					{loginFailed && (
+						<p className="text-md font-semibold text-red-500 text-center mt-1">
+							Incorrect Username or Passsword.
+						</p>
+					)}
 
 					<div>
 						<button
