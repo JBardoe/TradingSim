@@ -1,5 +1,11 @@
+import RegisterForm from "../components/loginComponents/RegisterForm";
+
 const Register = () => {
-	return <div>Register</div>;
+	return (
+		<div className="flex flex-col items-center justify-center h-full">
+			<RegisterForm />
+		</div>
+	);
 };
 
 export default Register;

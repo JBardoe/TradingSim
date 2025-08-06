@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request, redirect, session, send_from_directory
+from flask import Flask, jsonify, request, redirect, session, send_from_directory, make_response
 from flask_login import login_user, LoginManager, current_user, logout_user, login_required
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
@@ -45,19 +45,17 @@ def login():
 	return jsonify(message="Login Successful", success=True)
 
 @app.route("/api/register", methods=['POST'])
-def register():
-    if not ("email" in request.form and "password" in request.form and "fname" in request.form and "lname" in request.form):
-        return jsonify(message="Invalid form submission", success=False)
-    
-    email = request.form.get("email")
+def register():  
+    json = request.form.json()  
+    email = json.get("email")
     
     if User.query.filter_by(email = email).all():
-        return jsonify(message="User already exists with that email", success=False)
+        return make_response(jsonify(message="User already exists with that email"), 409)
     
-    add_user(email=email, rawPassword=request.form.get("password"), fname=request.form.get("fname"), lname=request.form.get("lname"))
+    add_user(email=email, rawPassword=json.get("password"), fname=json.get("fname"), lname=json.get("lname"))
     login_user(User.query.filter_by(email=email).first())
     
-    return jsonify("Registration Successful", success=True)
+    return make_response(jsonify("Registration Successful"), 200)
 
 @app.route('/')
 @app.route('/<path:path>')
