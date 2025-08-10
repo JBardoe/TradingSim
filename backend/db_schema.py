@@ -4,10 +4,10 @@ from flask_login import UserMixin
 
 db = SQLAlchemy()
 
-class User(UserMixin, db.Modal):
+class User(UserMixin, db.Model):
     __tablename__ = 'users'
-    id = db.Columm(db.Integer, primary_key=True)
-    fname = db.Columns(db.Text())
+    id = db.Column(db.Integer, primary_key=True)
+    fname = db.Column(db.Text())
     lname = db.Column(db.Text())
     email = db.Column(db.Text())
     password = db.Column(db.Text())
@@ -26,5 +26,4 @@ def add_user(fname, lname, email, rawPassword):
     db.session.commit()
 
 def dbinit():
-    #TODO
-    return
+    add_user("Jack", "Bardoe", "jackbardoe@gmail.com", "Password1#")

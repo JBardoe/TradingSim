@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { redirect } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import useAuthenticated from "../hooks/useAuthenticated";
 
 interface loginFormData {
 	email: HTMLInputElement;
@@ -7,40 +8,47 @@ interface loginFormData {
 }
 
 const LoginForm = () => {
+	const { authenticated } = useAuthenticated(false);
 	const [loginFailed, setLoginFailed] = useState(false);
+	const navigate = useNavigate();
 
-	const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+	if (authenticated) navigate("/");
+
+	const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
 		setLoginFailed(false);
 		const form = event.currentTarget;
 		const formElements = form.elements as typeof form.elements &
 			loginFormData;
 
-		sendData(
+		const resp = await sendData(
 			JSON.stringify({
 				email: formElements.email.value,
 				password: formElements.password.value,
 			})
 		);
-	};
-
-	const sendData = async (data: string) => {
-		const resp = await fetch("/api/register", {
-			method: "POST",
-			mode: "cors",
-			cache: "no-cache",
-			credentials: "same-origin",
-			headers: { "Content-Types": "application/json" },
-			redirect: "follow",
-			referrerPolicy: "no-referrer",
-			body: data,
-		});
 
 		if (resp.status !== 200) {
 			setLoginFailed(true);
 		} else {
-			redirect("/");
+			navigate("/");
 		}
+		return resp;
+	};
+
+	const sendData = async (data: string) => {
+		const resp = await fetch("http://localhost:5000/api/login", {
+			//TODO change
+			method: "POST",
+			mode: "cors",
+			cache: "no-cache",
+			credentials: "include",
+			headers: { "Content-Type": "application/json" },
+			redirect: "follow",
+			referrerPolicy: "no-referrer",
+			body: data,
+		});
+		return resp;
 	};
 	return (
 		<div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">

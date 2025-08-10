@@ -10,11 +10,19 @@ app = Flask(__name__, static_folder="build", static_url_path="/")
 app.secret_key = "secretKey"
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///tradingsim.sqlite'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+db.init_app(app)
 
-
-CORS(app)
+CORS(app, supports_credentials=True)
 login_manager = LoginManager()
 login_manager.init_app(app)
+
+def resetDb():
+    with app.app_context():
+        db.drop_all()
+        db.create_all()
+        dbinit()
+
+resetDb()#Database is reset when the app is run
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -28,20 +36,19 @@ def unauthorised_callback():
 def handle_error(e):
     return jsonify(message="An unexpected error has occurred")
 
-
 @app.route("/api/login", methods=['POST'])
 def login():
-	json = request.form.json()
+	json = request.get_json()
 
 	user = User.query.filter_by(email = json.get("email")).first()
-
+ 
 	if not user:
-		return make_response(jsonify(message="Unknown User"), 401)
+		return jsonify(message="Unknown User"), 401
 	elif not security.check_password_hash(user.password, json.get("password")):
-		return make_response(jsonify(message="Incorrect Username or Password"), 401)
+		return jsonify(message="Incorrect Username or Password"), 401
 
 	login_user(user)
-	return make_response(jsonify(message="Login Successful"), 200)
+	return jsonify(message="Login Successful"), 200
 
 @app.route("/api/register", methods=['POST'])
 def register():  
@@ -54,7 +61,19 @@ def register():
     add_user(email=email, rawPassword=json.get("password"), fname=json.get("fname"), lname=json.get("lname"))
     login_user(User.query.filter_by(email=email).first())
     
-    return make_response(jsonify("Registration Successful"), 200)
+    return jsonify("Registration Successful"), 200
+
+@app.route("/api/checkAuth", methods=['GET', 'POST'])
+def check_auth():
+    if current_user.is_authenticated:
+        return jsonify(message="User Authenticated"), 200
+    else:
+        return jsonify(message="User Unauthorised"), 401
+    
+@app.route("/api/logout", methods=['GET', 'POST'])
+def logout():
+    logout_user()
+    return jsonify("Logout Successful!"), 200
 
 @app.route('/')
 @app.route('/<path:path>')

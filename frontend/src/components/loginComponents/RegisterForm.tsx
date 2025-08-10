@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { redirect } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import useAuthenticated from "../hooks/useAuthenticated";
 
 interface registerFormData {
 	email: HTMLInputElement;
@@ -10,10 +11,14 @@ interface registerFormData {
 }
 
 const RegisterForm = () => {
+	const { authenticated } = useAuthenticated(false);
 	const [invalidPassword, setInvalidPassword] = useState(false);
 	const [invalidEmail, setInvalidEmail] = useState(false);
 	const [passwordMatch, setPasswordMatch] = useState(true);
 	const [existingUser, setExistingUser] = useState(false);
+	const naviate = useNavigate();
+
+	if (authenticated) naviate("/");
 
 	const baseInputClasses =
 		"block w-full rounded-md bg-white dark:bg-white/5 px-3 py-1.5 text-base outline-1 -outline-offset-1 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 sm:text-sm/6";
@@ -24,7 +29,9 @@ const RegisterForm = () => {
 	const emailRegex = new RegExp(
 		"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+.[a-zA-Z]{2,}$"
 	);
-	const handleFormSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+	const handleFormSubmit = async (
+		event: React.FormEvent<HTMLFormElement>
+	) => {
 		event.preventDefault();
 		const form = event.currentTarget;
 		const formElements = form.elements as typeof form.elements &
@@ -37,7 +44,7 @@ const RegisterForm = () => {
 		} else if (formElements.password.value !== formElements.confirm.value) {
 			setPasswordMatch(false);
 		} else {
-			sendData(
+			const resp = await sendData(
 				JSON.stringify({
 					email: formElements.email.value,
 					password: formElements.password.value,
@@ -45,26 +52,29 @@ const RegisterForm = () => {
 					lname: formElements.lname.value,
 				})
 			);
+			if (resp.status !== 200) {
+				setExistingUser(true);
+			} else {
+				naviate("/");
+			}
+			return resp;
 		}
 	};
 
 	const sendData = async (data: string) => {
-		const resp = await fetch("/api/register", {
+		const resp = await fetch("http://localhost:5000/api/register", {
+			//TODO change
 			method: "POST",
 			mode: "cors",
 			cache: "no-cache",
-			credentials: "same-origin",
-			headers: { "Content-Types": "application/json" },
+			credentials: "include",
+			headers: { "Content-Type": "application/json" },
 			redirect: "follow",
 			referrerPolicy: "no-referrer",
 			body: data,
 		});
 
-		if (resp.status !== 200) {
-			setExistingUser(true);
-		} else {
-			redirect("/");
-		}
+		return resp;
 	};
 
 	//TODO fix size
