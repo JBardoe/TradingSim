@@ -21,7 +21,7 @@ const RegisterForm = () => {
 	if (authenticated) naviate("/");
 
 	const baseInputClasses =
-		"block w-full rounded-md bg-white dark:bg-white/5 px-3 py-1.5 text-base outline-1 -outline-offset-1 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 sm:text-sm/6";
+		"text-center block w-[80%] rounded-md bg-white dark:bg-white/5 px-3 py-1.5 text-base outline-1 -outline-offset-1 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 sm:text-sm/6";
 
 	const passwordRegex = new RegExp(
 		"^(?=.*[a-z])(?=.*[A-Z])(?=.*d)(?=.*[^A-Za-z0-9]).{8,}$"
@@ -79,7 +79,7 @@ const RegisterForm = () => {
 
 	//TODO fix size
 	return (
-		<div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
+		<div className="flex h-fit w-[40vw] flex-col justify-center py-12 shadow-lg shadow-black mt-[2%] mb-[5%]">
 			<div className="sm:mx-auto sm:w-full sm:max-w-sm">
 				<img
 					src="..\..\..\public\logo.png"
@@ -91,16 +91,19 @@ const RegisterForm = () => {
 				</h2>
 			</div>
 
-			<div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-				<form className="space-y-6" onSubmit={handleFormSubmit}>
-					<div>
+			<div className="mt-10 w-full sm:mx-auto sm:w-full sm:max-w-sm">
+				<form
+					className="space-y-6 w-full flex flex-col items-center"
+					onSubmit={handleFormSubmit}
+				>
+					<div className="w-full flex flex-col items-center">
 						<label
 							htmlFor="email"
 							className="block text-sm/6 font-medium text-gray-900 dark:text-gray-100"
 						>
 							Email Address
 						</label>
-						<div className="mt-2">
+						<div className="mt-2 w-full flex flex-col items-center">
 							<input
 								id="email"
 								type="email"
@@ -131,7 +134,7 @@ const RegisterForm = () => {
 						</div>
 					</div>
 
-					<div>
+					<div className="w-full flex flex-col items-center">
 						<div className="flex items-center justify-between">
 							<label
 								htmlFor="password"
@@ -140,7 +143,7 @@ const RegisterForm = () => {
 								Password
 							</label>
 						</div>
-						<div className="mt-2">
+						<div className="mt-2 w-full flex flex-col items-center">
 							<input
 								id="password"
 								type="password"
@@ -165,7 +168,7 @@ const RegisterForm = () => {
 						</div>
 					</div>
 
-					<div>
+					<div className="w-full flex flex-col items-center">
 						<div className="flex items-center justify-between">
 							<label
 								htmlFor="confirm"
@@ -174,7 +177,7 @@ const RegisterForm = () => {
 								Confirm Password
 							</label>
 						</div>
-						<div className="mt-2">
+						<div className="mt-2 w-full flex flex-col items-center">
 							<input
 								id="confirm"
 								type="password"
@@ -197,7 +200,7 @@ const RegisterForm = () => {
 						</div>
 					</div>
 
-					<div>
+					<div className="w-full flex flex-col items-center">
 						<div className="flex items-center justify-between">
 							<label
 								htmlFor="fname"
@@ -206,19 +209,19 @@ const RegisterForm = () => {
 								First Name
 							</label>
 						</div>
-						<div className="mt-2">
+						<div className="mt-2 w-full flex flex-col items-center">
 							<input
 								id="fname"
 								type="text"
 								name="fname"
 								required
 								autoComplete="given-name"
-								className="block w-full rounded-md bg-white dark:bg-white/5 px-3 py-1.5 text-base outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 dark:outline-white/10 dark:placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 dark:focus:outline-indigo-500 sm:text-sm/6"
+								className="text-center block w-[80%] rounded-md bg-white dark:bg-white/5 px-3 py-1.5 text-base outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 dark:outline-white/10 dark:placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 dark:focus:outline-indigo-500 sm:text-sm/6"
 							/>
 						</div>
 					</div>
 
-					<div>
+					<div className="w-full flex flex-col items-center">
 						<div className="flex items-center justify-between">
 							<label
 								htmlFor="lname"
@@ -227,14 +230,14 @@ const RegisterForm = () => {
 								Last Name
 							</label>
 						</div>
-						<div className="mt-2">
+						<div className="mt-2 w-full flex flex-col items-center">
 							<input
 								id="lname"
 								type="text"
 								name="lname"
 								required
 								autoComplete="family-name"
-								className="block w-full rounded-md bg-white dark:bg-white/5 px-3 py-1.5 text-base outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 dark:outline-white/10 dark:placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 dark:focus:outline-indigo-500 sm:text-sm/6"
+								className="text-center block w-[80%] rounded-md bg-white dark:bg-white/5 px-3 py-1.5 text-base outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 dark:outline-white/10 dark:placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 dark:focus:outline-indigo-500 sm:text-sm/6"
 							/>
 						</div>
 					</div>

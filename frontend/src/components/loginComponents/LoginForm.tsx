@@ -51,7 +51,7 @@ const LoginForm = () => {
 		return resp;
 	};
 	return (
-		<div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
+		<div className="flex h-fit w-[40vw] flex-col justify-center py-12 shadow-lg shadow-black">
 			<div className="sm:mx-auto sm:w-full sm:max-w-sm">
 				<img
 					src="..\..\..\public\logo.png"
@@ -63,29 +63,32 @@ const LoginForm = () => {
 				</h2>
 			</div>
 
-			<div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-				<form onSubmit={handleSubmit} className="space-y-6">
-					<div>
+			<div className="mt-10 w-full sm:mx-auto sm:w-full sm:max-w-sm">
+				<form
+					onSubmit={handleSubmit}
+					className="space-y-6 w-full flex flex-col items-center"
+				>
+					<div className="w-full flex flex-col items-center">
 						<label
 							htmlFor="email"
 							className="block text-sm/6 font-medium text-gray-900 dark:text-gray-100"
 						>
 							Email Address
 						</label>
-						<div className="mt-2">
+						<div className="mt-2 w-full flex flex-col items-center">
 							<input
 								id="email"
 								type="email"
 								name="email"
 								required
 								autoComplete="email"
-								className="block w-full rounded-md bg-white dark:bg-white/5 px-3 py-1.5 text-base outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 dark:outline-white/10 dark:placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 dark:focus:outline-indigo-500 sm:text-sm/6"
+								className="text-center block w-[80%] rounded-md bg-white dark:bg-white/5 px-3 py-1.5 text-base outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 dark:outline-white/10 dark:placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 dark:focus:outline-indigo-500 sm:text-sm/6"
 							/>
 						</div>
 					</div>
 
-					<div>
-						<div className="flex items-center justify-between">
+					<div className="w-full flex flex-col items-center">
+						<div className="flex items-center justify-between w-full px-[10%]">
 							<label
 								htmlFor="password"
 								className="block text-sm/6 font-medium text-gray-900 dark:text-gray-100"
@@ -101,14 +104,14 @@ const LoginForm = () => {
 								</a>
 							</div>
 						</div>
-						<div className="mt-2">
+						<div className="mt-2 w-full flex flex-col items-center">
 							<input
 								id="password"
 								type="password"
 								name="password"
 								required
 								autoComplete="current-password"
-								className="block w-full rounded-md bg-white dark:bg-white/5 px-3 py-1.5 text-base outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 dark:outline-white/10 dark:placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 dark:focus:outline-indigo-500 sm:text-sm/6"
+								className=" text-center block w-[80%] rounded-md bg-white dark:bg-white/5 px-3 py-1.5 text-base outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 dark:outline-white/10 dark:placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 dark:focus:outline-indigo-500 sm:text-sm/6"
 							/>
 						</div>
 					</div>
