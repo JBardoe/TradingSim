@@ -8,6 +8,10 @@ const useAuthenticated = (redirectIfUnauthorised = true) => {
 	useEffect(() => {
 		const checkAuth = async () => {
 			try {
+				//TODO remove
+				setAuthenticated(true);
+				return;
+
 				const resp = await fetch(
 					"http://localhost:5000/api/checkAuth",
 					{

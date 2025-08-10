@@ -11,12 +11,10 @@ const LogoutButton = () => {
 		if (resp.status === 200) {
 			navigate("/login");
 		}
+		return resp;
 	};
 	return (
-		<button
-			className="fixed right-2 top-2 rounded-2xl"
-			onClick={handleLogout}
-		>
+		<button className="rounded-2xl cursor-pointer" onClick={handleLogout}>
 			Logout
 		</button>
 	);
