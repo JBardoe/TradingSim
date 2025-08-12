@@ -1,10 +1,13 @@
-from flask import Flask, jsonify, request, redirect, session, send_from_directory, make_response
+from flask import Flask, json, jsonify, request, redirect, session, send_from_directory, make_response
 from flask_login import login_user, LoginManager, current_user, logout_user, login_required
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug import security
-from db_schema import db, User, add_user, dbinit
+
 import os
+import yfinance as yf
+
+from db_schema import db, User, add_user, dbinit
 
 app = Flask(__name__, static_folder="build", static_url_path="/")
 app.secret_key = "secretKey"
@@ -69,11 +72,17 @@ def check_auth():
         return jsonify(message="User Authenticated"), 200
     else:
         return jsonify(message="User Unauthorised"), 401
-    
+
 @app.route("/api/logout", methods=['GET', 'POST'])
 def logout():
     logout_user()
     return jsonify("Logout Successful!"), 200
+
+@app.route("/api/allStocks", methods=['GET', 'POST'])
+def all_stocks():
+	stock_code = request.args.get("stock")
+	data = yf.download(["AAPL", "MSFT", "AMZN", "GOOGL", "TSLA", "NVDA", "META", "JPM", "JNJ", "XOM"], period="1d", interval="1h")["Close"]
+	return data.to_json()
 
 @app.route('/')
 @app.route('/<path:path>')

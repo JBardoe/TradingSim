@@ -28,3 +28,5 @@ yarn-error.log*
 .vscode
 Plan.md
 react-app-env.d.ts
+
+instance/
