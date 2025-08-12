@@ -14,7 +14,10 @@ const LogoutButton = () => {
 		return resp;
 	};
 	return (
-		<button className="rounded-2xl cursor-pointer" onClick={handleLogout}>
+		<button
+			className="hover:bg-indigo-300 active:bg-indigo-500 dark:hover:bg-indigo-700 dark:active:bg-indigo-900 cursor-pointer w-full rounded-lg py-1"
+			onClick={handleLogout}
+		>
 			Logout
 		</button>
 	);

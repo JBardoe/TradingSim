@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import useAuthenticated from "../components/hooks/useAuthenticated";
-import LogoutButton from "../components/loginComponents/LogoutButton";
+import { useNavigate } from "react-router-dom";
+import TopBar from "../components/TopBar";
 
 const Home = () => {
 	const containerRef = useRef<HTMLDivElement>(null);
@@ -8,7 +9,7 @@ const Home = () => {
 	const [topHeight, setTopHeight] = useState(window.innerHeight * (2 / 3));
 	const [isDraggingVertical, setIsDraggingVertical] = useState(false);
 	const [isDraggingHorizontal, setIsDraggingHorizontal] = useState(false);
-	const [accountMenuOpen, setAccountMenuOpen] = useState(false);
+	const navigate = useNavigate();
 	const { authenticated } = useAuthenticated();
 
 	const startVerticalDrag = () => setIsDraggingVertical(true);
@@ -43,37 +44,7 @@ const Home = () => {
 
 	return (
 		<>
-			<div className="sticky top-0 w-full shadow-md shadow-gray-500 dark:shadow-black h-[6vh] dark:bg-gray-800 flex items-center px-[2vw] flex-row-reverse">
-				{!accountMenuOpen && (
-					<button
-						onClick={() => setAccountMenuOpen(!accountMenuOpen)}
-						className="cursor-pointer flex flex-row gap-3 w-fit"
-					>
-						<p className="font-semibold">user.mail.com</p>
-						<img src="../public/user.png" className="w-5"></img>
-					</button>
-				)}
-			</div>
-			{accountMenuOpen && (
-				<div className="fixed top-[1vh] right-[2vw] w-[20vw] rounded-2xl bg-gray-300 dark:bg-gray-600 p-[1%] flex flex-col items-center">
-					<div>
-						<div className="w-full flex flex-row justify-center gap-2">
-							<p className="font-semibold">user.mail.com</p>
-							<img src="../public/user.png" className="w-5"></img>
-						</div>
-						<button
-							onClick={() => setAccountMenuOpen(!accountMenuOpen)}
-							className="cursor-pointer absolute top-[2%] right-[4%]"
-						>
-							✕
-						</button>
-					</div>
-					<hr className="w-full text-gray-400 rounded-full my-2" />
-					<div>
-						<LogoutButton />
-					</div>
-				</div>
-			)}
+			<TopBar home={false} />
 			<div
 				ref={containerRef}
 				className="flex h-[94vh] w-screen bg-white dark:bg-gray-900"
@@ -86,7 +57,16 @@ const Home = () => {
 						style={{ height: `${topHeight}px` }}
 						className="overflow-auto bg-gray-50 dark:bg-gray-900 p-4"
 					>
-						<p>Tracked Stocks</p>
+						<button
+							style={{
+								right: `calc(1% + ${rightWidth}px)`,
+								bottom: `calc(95% - ${topHeight}px)`,
+							}}
+							className="text-white rounded-full absolute cursor-pointer bg-indigo-600 hover:bg-indigo-800 active:bg-indigo-950 dark:bg-indigo-500 dark:hover:bg-indigo-700 dark:active:bg-indigo-900 text-4xl font-bold px-[0.7%] pb-[0.4%] hover:scale-[110%] active:scale-[97%]"
+							onClick={() => navigate("/allStocks")}
+						>
+							+
+						</button>
 					</div>
 
 					<div
