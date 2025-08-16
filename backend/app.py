@@ -4,6 +4,7 @@ from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug import security
 
+import pandas as pd
 import os
 import yfinance as yf
 
@@ -20,24 +21,25 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 
 def resetDb():
-    with app.app_context():
-        db.drop_all()
-        db.create_all()
-        dbinit()
+	with app.app_context():
+		db.drop_all()
+		db.create_all()
+		dbinit()
 
 resetDb()#Database is reset when the app is run
 
 @login_manager.user_loader
 def load_user(user_id):
-    return User.query.get(int(user_id))
+	return User.query.get(int(user_id))
 
 @login_manager.unauthorized_handler
 def unauthorised_callback():
-    return jsonify(message="Login is required to access this route")
+	return jsonify(message="Login is required to access this route")
 
 @app.errorhandler(Exception)
 def handle_error(e):
-    return jsonify(message="An unexpected error has occurred")
+	print("Error:", e)
+	return jsonify(message="An unexpected error has occurred")
 
 @app.route("/api/login", methods=['POST'])
 def login():
@@ -55,44 +57,79 @@ def login():
 
 @app.route("/api/register", methods=['POST'])
 def register():  
-    json = request.form.json()  
-    email = json.get("email")
-    
-    if User.query.filter_by(email = email).all():
-        return make_response(jsonify(message="User already exists with that email"), 409)
-    
-    add_user(email=email, rawPassword=json.get("password"), fname=json.get("fname"), lname=json.get("lname"))
-    login_user(User.query.filter_by(email=email).first())
-    
-    return jsonify("Registration Successful"), 200
+	json = request.form.json()  
+	email = json.get("email")
+
+	if User.query.filter_by(email = email).all():
+		return make_response(jsonify(message="User already exists with that email"), 409)
+
+	add_user(email=email, rawPassword=json.get("password"), fname=json.get("fname"), lname=json.get("lname"))
+	login_user(User.query.filter_by(email=email).first())
+
+	return jsonify("Registration Successful"), 200
 
 @app.route("/api/checkAuth", methods=['GET', 'POST'])
 def check_auth():
-    if current_user.is_authenticated or app.debug:
-        return jsonify(message="User Authenticated"), 200
-    else:
-        return jsonify(message="User Unauthorised"), 401
+	if current_user.is_authenticated or app.debug:
+		return jsonify(message="User Authenticated"), 200
+	else:
+		return jsonify(message="User Unauthorised"), 401
 
 @app.route("/api/logout", methods=['GET', 'POST'])
 def logout():
-    logout_user()
-    return jsonify("Logout Successful!"), 200
+	logout_user()
+	return jsonify("Logout Successful!"), 200
 
-@app.route("/api/getStockData", methods=['GET', 'POST'])
-def all_stocks():
+@app.route("/api/getRecentStockData", methods=['POST'])
+def get_recent_stock():
 	stock_code = request.args.get("stock")
 	time_period = request.args.get("period")
 	time_interval = request.args.get("interval")
-	data = yf.download(stock_code, period=time_period, interval=time_interval)
+	data = yf.download(stock_code, period=time_period, interval=time_interval)["Close"]
 	return data.to_json()
+
+@app.route("/api/getStockPanelData", methods=['GET'])
+def	get_stock_panel():
+	stock_code = request.args.get("stock")
+	if not stock_code:
+		return jsonify({"error": "Missing 'stock' query parameter"}), 400
+
+	print(f"Received request for {stock_code}")
+
+	data = yf.download(stock_code, interval="1d", period="6mo")
+
+	if data.empty:
+		return jsonify({"error": f"No data found for {stock_code}"}), 404
+
+	close = data["Close"]
+	if isinstance(close, pd.DataFrame):
+		close = close.iloc[:, 0]
+
+	data["MA100"] = close.rolling(window=100).mean()
+
+	current_price = close.iloc[-1]
+	avg_price = data["MA100"].iloc[-1]
+
+	if pd.isna(avg_price):
+		return jsonify({
+			"error": "Not enough data to compute 100-day average",
+			"current": float(current_price)
+		}), 200
+
+	return jsonify({
+		"avg": float(avg_price),
+		"current": float(current_price)
+	})
+	
+	
 
 @app.route('/')
 @app.route('/<path:path>')
 def serve_react(path=''):
-    if path != "" and os.path.exists(os.path.join(app.static_folder, path)):
-        return send_from_directory(app.static_folder, path)
-    else:
-        return send_from_directory(app.static_folder, 'index.html')
+	if path != "" and os.path.exists(os.path.join(app.static_folder, path)):
+		return send_from_directory(app.static_folder, path)
+	else:
+		return send_from_directory(app.static_folder, 'index.html')
 
 if __name__ == '__main__':
-    app.run(debug=True)
+	app.run(debug=True)

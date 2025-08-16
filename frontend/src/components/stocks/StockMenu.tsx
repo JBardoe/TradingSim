@@ -1,22 +1,54 @@
 import { useState } from "react";
 import StockPanel from "./StockPanel";
+import StockWindow from "./StockWindow";
+
+const usedStocks = [
+	"AAPL",
+	"AMZN",
+	"GOOGL",
+	"JNJ",
+	"JPM",
+	"NVDA",
+	"META",
+	"MSFT",
+	"TSLA",
+	"XOM",
+];
+
+usedStocks.sort();
 
 const StockMenu = () => {
 	const [open, setOpen] = useState(false);
 	const [selected, setSelected] = useState(0);
+	const [windowOpen, setWindowOpen] = useState<string | null>(null);
 
 	const options = [
-		{ value: "alpha", label: "Alphabetical" },
-		{ value: "reverse-alpha", label: "Reverse Alphabetical" },
-		{ value: "date-new", label: "Newest First" },
-		{ value: "date-old", label: "Oldest First" },
+		{
+			value: "alpha",
+			label: "Alphabetical",
+			sort: () => usedStocks.sort(),
+		},
+		{
+			value: "reverse-alpha",
+			label: "Reverse Alphabetical",
+			sort: () => {
+				usedStocks.sort();
+				usedStocks.reverse();
+			},
+		},
 	];
 
 	const onSelect = (index: number) => {
 		setSelected(index);
 	};
+
+	const handleOpenWindow = (name: string) => {
+		setWindowOpen(name);
+	};
+
 	return (
 		<>
+			{windowOpen && <StockWindow name={windowOpen} />}
 			<div className="w-full flex flex-col items-center mt-8">
 				<div className="relative inline-block text-left">
 					Order By:
@@ -36,6 +68,7 @@ const StockMenu = () => {
 										onClick={() => {
 											onSelect(index);
 											setOpen(false);
+											opt.sort();
 										}}
 										className="block w-full text-left px-4 py-2 text-sm cursor-pointer bg-white hover:bg-indigo-400 dark:bg-gray-800 dark:hover:bg-indigo-600"
 									>
@@ -49,54 +82,15 @@ const StockMenu = () => {
 			</div>
 
 			<div className="w-full h-full flex flex-wrap p-10 gap-x-15 gap-y-15 justify-center">
-				<StockPanel />
-				<StockPanel />
-				<StockPanel />
-				<StockPanel />
-				<StockPanel />
-				<StockPanel />
-				<StockPanel />
-				<StockPanel />
-				<StockPanel />
-				<StockPanel />
-				<StockPanel />
-				<StockPanel />
-				<StockPanel />
-				<StockPanel />
-				<StockPanel />
-				<StockPanel />
-				<StockPanel />
-				<StockPanel />
-				<StockPanel />
-				<StockPanel />
-				<StockPanel />
-				<StockPanel />
-				<StockPanel />
-				<StockPanel />
-				<StockPanel />
-				<StockPanel />
-				<StockPanel />
-				<StockPanel />
-				<StockPanel />
-				<StockPanel />
-				<StockPanel />
-				<StockPanel />
-				<StockPanel />
-				<StockPanel />
-				<StockPanel />
-				<StockPanel />
-				<StockPanel />
-				<StockPanel />
-				<StockPanel />
-				<StockPanel />
-				<StockPanel />
-				<StockPanel />
-				<StockPanel />
-				<StockPanel />
-				<StockPanel />
-				<StockPanel />
-				<StockPanel />
-				<StockPanel />
+				{usedStocks.map((value) => {
+					return (
+						<StockPanel
+							name={value}
+							key={value}
+							handleOpenWindow={handleOpenWindow}
+						/>
+					);
+				})}
 			</div>
 		</>
 	);
