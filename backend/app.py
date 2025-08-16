@@ -78,10 +78,12 @@ def logout():
     logout_user()
     return jsonify("Logout Successful!"), 200
 
-@app.route("/api/allStocks", methods=['GET', 'POST'])
+@app.route("/api/getStockData", methods=['GET', 'POST'])
 def all_stocks():
 	stock_code = request.args.get("stock")
-	data = yf.download(["AAPL", "MSFT", "AMZN", "GOOGL", "TSLA", "NVDA", "META", "JPM", "JNJ", "XOM"], period="1d", interval="1h")["Close"]
+	time_period = request.args.get("period")
+	time_interval = request.args.get("interval")
+	data = yf.download(stock_code, period=time_period, interval=time_interval)
 	return data.to_json()
 
 @app.route('/')
