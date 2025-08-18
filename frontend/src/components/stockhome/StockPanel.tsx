@@ -12,12 +12,12 @@ const StockPanel = ({ name, handleOpenWindow }: StockPanelProps) => {
 	const [curr, setCurr] = useState<number | null>(null);
 
 	useEffect(() => {
-		console.log("About to send the request for " + name);
 		axios
 			.get(`http://localhost:5000/api/getStockPanelData?stock=${name}`)
 			.then((res) => {
-				console.log("Received response for " + name);
-				console.log(res.data);
+				if (res.data.code !== name) {
+					return;
+				}
 				setAvg(res.data.avg);
 				setCurr(res.data.current);
 			})

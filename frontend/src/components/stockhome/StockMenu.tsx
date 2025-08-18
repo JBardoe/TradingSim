@@ -46,9 +46,13 @@ const StockMenu = () => {
 		setWindowOpen(name);
 	};
 
+	const onClose = () => {
+		setWindowOpen(null);
+	};
+
 	return (
 		<>
-			{windowOpen && <StockWindow name={windowOpen} />}
+			{windowOpen && <StockWindow name={windowOpen} onClose={onClose} />}
 			<div className="w-full flex flex-col items-center mt-8">
 				<div className="relative inline-block text-left">
 					Order By:

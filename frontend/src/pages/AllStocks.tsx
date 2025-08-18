@@ -1,4 +1,4 @@
-import StockMenu from "../components/stocks/StockMenu";
+import StockMenu from "../components/stockhome/StockMenu";
 import TopBar from "../components/TopBar";
 
 const AllStocks = () => {

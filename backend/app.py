@@ -7,6 +7,7 @@ from werkzeug import security
 import pandas as pd
 import os
 import yfinance as yf
+from datetime import datetime
 
 from db_schema import db, User, add_user, dbinit
 
@@ -39,7 +40,7 @@ def unauthorised_callback():
 @app.errorhandler(Exception)
 def handle_error(e):
 	print("Error:", e)
-	return jsonify(message="An unexpected error has occurred")
+	return jsonify(message="An unexpected error has occurred"), 500
 
 @app.route("/api/login", methods=['POST'])
 def login():
@@ -117,11 +118,24 @@ def	get_stock_panel():
 		}), 200
 
 	return jsonify({
+		"code": stock_code,
 		"avg": float(avg_price),
 		"current": float(current_price)
 	})
 	
-	
+@app.route("/api/getStockWindowGraph", methods=['POST'])
+def get_stock_window_graph():
+	json = request.get_json()
+	stock_code = json.get("code")
+	interval = json.get("interval")
+	period = json.get("period")
+	data = yf.download(stock_code, interval=interval, period=period)["Close"]
+ 
+	formatted= []
+	for row in data.itertuples():
+		formatted.append({"value": row[1], "time":row[0].timestamp()})
+
+	return jsonify(formatted)
 
 @app.route('/')
 @app.route('/<path:path>')
