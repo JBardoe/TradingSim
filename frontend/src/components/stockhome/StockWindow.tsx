@@ -13,6 +13,8 @@ const StockWindow = ({ name, onClose }: StockWindowProps) => {
 	const [data, setData] = useState<{ value: number; time: number }[] | null>(
 		[]
 	);
+	const [fiftyAvg, setFiftyAvg] = useState<number | null>(null);
+	const [hundredAvg, setHundredAvg] = useState<number | null>(null);
 	const navigate = useNavigate();
 
 	useEffect(() => {
@@ -34,11 +36,26 @@ const StockWindow = ({ name, onClose }: StockWindowProps) => {
 				setData(res.data);
 			})
 			.catch((err) => console.error(err));
-	}, [setData, dayInterval]);
 
-	useEffect(() => {
-		console.log(data);
-	}, [data]);
+		axios
+			.post(
+				"http://localhost:5000/api/getStockAverages",
+				{
+					code: name,
+					dayInterval: dayInterval,
+				},
+				{
+					headers: {
+						"Content-Type": "application/json",
+					},
+				}
+			)
+			.then((res) => {
+				setFiftyAvg(res.data.fifty);
+				setHundredAvg(res.data.hundred);
+			})
+			.catch((err) => console.error(err));
+	}, [setData, dayInterval, setFiftyAvg, setHundredAvg, name]);
 
 	return (
 		<>
@@ -103,6 +120,12 @@ const StockWindow = ({ name, onClose }: StockWindowProps) => {
 							Loading Graph...
 						</span>
 					)}
+					<div className="w-full h-fit mt-[5%] font-semibold text-3xl flex flex-col items-center justify-center">
+						<span>50 Period Average: ${fiftyAvg?.toFixed(2)}</span>
+						<span className="mt-[10%]">
+							100 Period Average: ${hundredAvg?.toFixed(2)}
+						</span>
+					</div>
 				</div>
 			</div>
 		</>

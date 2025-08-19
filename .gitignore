@@ -30,3 +30,6 @@ Plan.md
 react-app-env.d.ts
 
 instance/
+backend/instance/
+
+*.sqlite

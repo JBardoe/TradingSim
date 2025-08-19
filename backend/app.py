@@ -7,7 +7,7 @@ from werkzeug import security
 import pandas as pd
 import os
 import yfinance as yf
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from db_schema import db, User, add_user, dbinit
 
@@ -95,8 +95,6 @@ def	get_stock_panel():
 	if not stock_code:
 		return jsonify({"error": "Missing 'stock' query parameter"}), 400
 
-	print(f"Received request for {stock_code}")
-
 	data = yf.download(stock_code, interval="1d", period="6mo")
 
 	if data.empty:
@@ -136,6 +134,34 @@ def get_stock_window_graph():
 		formatted.append({"value": row[1], "time":row[0].timestamp()})
 
 	return jsonify(formatted)
+
+@app.route("/api/getStockAverages", methods=['POST'])
+def get_stock_averages():
+	json = request.get_json()
+	stock_code = json.get("code")
+	day_interval = json.get("dayInterval")
+ 
+	print("Received request ", json)
+ 
+	if not stock_code:
+		return jsonify({"error": "Missing required query parameters"}), 400
+
+	interval = "1d" if day_interval else "1m"
+	period = datetime.now() - timedelta(days=(150 if day_interval else 1))
+    
+    
+	data = yf.download(stock_code, interval=interval, start=period)
+
+	if data.empty:
+		return jsonify({"error": f"No data found for {stock_code}"}), 404
+
+	data["MA100"] = data["Close"].rolling(window=100).mean()
+	data["MA50"] = data["Close"].rolling(window=50).mean()
+
+	return jsonify({
+		"fifty": float(data["MA50"].iloc[-1]),
+		"hundred": float(data["MA100"].iloc[-1])
+	})
 
 @app.route('/')
 @app.route('/<path:path>')

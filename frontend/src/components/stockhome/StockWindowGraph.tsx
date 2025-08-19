@@ -73,7 +73,7 @@ export const StockWindowGraph = ({
 		};
 	}, [data, dayInterval]);
 
-	return <div ref={chartContainerRef} className="w-full h-full mt-[6%]" />;
+	return <div ref={chartContainerRef} className="w-full h-fit mt-[6%]" />;
 };
 
 export default StockWindowGraph;
