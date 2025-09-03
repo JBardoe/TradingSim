@@ -32,13 +32,11 @@ export const StockWindowGraph = ({
 				timeFormatter: (time: Time) => {
 					const date = new Date((time as number) * 1000);
 					if (dayInterval) {
-						// Daily data → show Month + Day
 						return date.toLocaleDateString("en-US", {
 							month: "short",
 							day: "numeric",
 						});
 					} else {
-						// Intraday → show Date + Time
 						return date.toLocaleString("en-US", {
 							month: "short",
 							day: "numeric",
@@ -60,6 +58,14 @@ export const StockWindowGraph = ({
 
 		chart.timeScale().fitContent();
 
+		chart.timeScale().applyOptions({
+			rightOffset: 0,
+			barSpacing: 6,
+			minBarSpacing: 2,
+			fixLeftEdge: true,
+			fixRightEdge: true,
+		});
+
 		const handleResize = () => {
 			chart.applyOptions({
 				width: chartContainerRef.current!.clientWidth,
@@ -73,7 +79,7 @@ export const StockWindowGraph = ({
 		};
 	}, [data, dayInterval]);
 
-	return <div ref={chartContainerRef} className="w-full h-fit mt-[6%]" />;
+	return <div ref={chartContainerRef} className="w-full h-fit mt-[3%]" />;
 };
 
 export default StockWindowGraph;

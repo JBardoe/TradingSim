@@ -86,7 +86,7 @@ const StockWindow = ({ name, onClose }: StockWindowProps) => {
 							(dayInterval
 								? "bg-gray-500 dark:bg-gray-950 font-bold "
 								: "bg-gray-300 dark:bg-gray-700 cursor-pointer ") +
-							"absolute top-3 left-[30%] px-20 py-3 rounded-lg text-xl"
+							"absolute top-3 left-[25%] w-[20%] py-1 rounded-lg text-xl"
 						}
 						onClick={() => setDayInterval(true)}
 					>
@@ -97,7 +97,7 @@ const StockWindow = ({ name, onClose }: StockWindowProps) => {
 							(!dayInterval
 								? "bg-gray-500 dark:bg-gray-950 font-bold "
 								: "bg-gray-300 dark:bg-gray-700 cursor-pointer ") +
-							"absolute top-3 left-[60%] px-20 py-3 rounded-lg text-xl"
+							"absolute top-3 left-[55%] w-[20%] py-1 rounded-lg text-xl"
 						}
 						onClick={() => setDayInterval(false)}
 					>
@@ -108,7 +108,7 @@ const StockWindow = ({ name, onClose }: StockWindowProps) => {
 						onClick={() => {
 							navigate(`/singleStock/${name}`);
 						}}
-						className="w-12 absolute right-[4%] top-2 rounded-full p-2 hover:bg-gray-300 dark:hover:bg-gray-700 cursor-pointer"
+						className="w-12 absolute right-[4%] top-2 rounded-full p-2 hover:bg-gray-300 active:bg-gray-500 dark:hover:bg-gray-700 dark:active:bg-gray-950 cursor-pointer dark:invert-100"
 					/>
 					{data ? (
 						<StockWindowGraph
@@ -120,10 +120,14 @@ const StockWindow = ({ name, onClose }: StockWindowProps) => {
 							Loading Graph...
 						</span>
 					)}
-					<div className="w-full h-fit mt-[5%] font-semibold text-3xl flex flex-col items-center justify-center">
-						<span>50 Period Average: ${fiftyAvg?.toFixed(2)}</span>
-						<span className="mt-[10%]">
-							100 Period Average: ${hundredAvg?.toFixed(2)}
+					<div className="w-full h-fit mt-[2%] font-semibold text-xl flex flex-col items-center justify-center">
+						<span>
+							50 {dayInterval ? "Day" : "Minute"} Average: $
+							{fiftyAvg?.toFixed(2)}
+						</span>
+						<span className="mt-[2%]">
+							100 {dayInterval ? "Day" : "Minute"} Average: $
+							{hundredAvg?.toFixed(2)}
 						</span>
 					</div>
 				</div>
