@@ -9,7 +9,7 @@ import os
 import yfinance as yf
 from datetime import datetime, timedelta
 
-from db_schema import db, User, add_user, dbinit
+from db_schema import db, User, add_user, dbinit, TrackedStock
 
 app = Flask(__name__, static_folder="build", static_url_path="/")
 app.secret_key = "secretKey"
@@ -35,7 +35,7 @@ def load_user(user_id):
 
 @login_manager.unauthorized_handler
 def unauthorised_callback():
-	return jsonify(message="Login is required to access this route")
+	return jsonify(message="Login is required to access this route"), 401
 
 @app.errorhandler(Exception)
 def handle_error(e):
@@ -47,7 +47,7 @@ def login():
 	json = request.get_json()
 
 	user = User.query.filter_by(email = json.get("email")).first()
- 
+
 	if not user:
 		return jsonify(message="Unknown User"), 401
 	elif not security.check_password_hash(user.password, json.get("password")):
@@ -64,14 +64,14 @@ def register():
 	if User.query.filter_by(email = email).all():
 		return make_response(jsonify(message="User already exists with that email"), 409)
 
-	add_user(email=email, rawPassword=json.get("password"), fname=json.get("fname"), lname=json.get("lname"))
+	add_user(email=email, raw_password=json.get("password"), fname=json.get("fname"), lname=json.get("lname"))
 	login_user(User.query.filter_by(email=email).first())
 
 	return jsonify("Registration Successful"), 200
 
 @app.route("/api/checkAuth", methods=['GET', 'POST'])
 def check_auth():
-	if current_user.is_authenticated or app.debug:
+	if current_user.is_authenticated:
 		return jsonify(message="User Authenticated"), 200
 	else:
 		return jsonify(message="User Unauthorised"), 401
@@ -128,7 +128,7 @@ def get_stock_window_graph():
 	interval = json.get("interval")
 	period = json.get("period")
 	data = yf.download(stock_code, interval=interval, period=period)["Close"]
- 
+
 	formatted= []
 	for row in data.itertuples():
 		formatted.append({"value": row[1], "time":row[0].timestamp()})
@@ -140,16 +140,16 @@ def get_stock_averages():
 	json = request.get_json()
 	stock_code = json.get("code")
 	day_interval = json.get("dayInterval")
- 
+
 	print("Received request ", json)
- 
+
 	if not stock_code:
 		return jsonify({"error": "Missing required query parameters"}), 400
 
 	interval = "1d" if day_interval else "1m"
 	period = datetime.now() - timedelta(days=(150 if day_interval else 1))
-    
-    
+
+
 	data = yf.download(stock_code, interval=interval, start=period)
 
 	if data.empty:
@@ -162,6 +162,23 @@ def get_stock_averages():
 		"fifty": float(data["MA50"].iloc[-1]),
 		"hundred": float(data["MA100"].iloc[-1])
 	})
+
+@app.route("/api/getTrackedStocks", methods=["POST"])
+def get_tracked_stocks():
+	if not current_user.is_authenticated:
+		return []
+
+	stock_codes = []
+
+	rows = TrackedStock.query.with_entities(TrackedStock.stock_code).filter_by(user_id = current_user.id).all()
+
+	for row in rows:
+		stock_codes.append(row[0])
+	
+	return jsonify({
+		"stocks": stock_codes
+	})
+    
 
 @app.route('/')
 @app.route('/<path:path>')

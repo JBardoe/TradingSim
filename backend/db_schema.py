@@ -18,12 +18,31 @@ class User(UserMixin, db.Model):
         self.email = email
         self.password = password
         
-def add_user(fname, lname, email, rawPassword):
-    hashedPassword = security.generate_password_hash(rawPassword)
+def add_user(fname, lname, email, raw_password):
+    hashed_password = security.generate_password_hash(raw_password)
     
-    newUser = User(fname, lname, email, hashedPassword)
-    db.session.add(newUser)
+    new_user = User(fname, lname, email, hashed_password)
+    db.session.add(new_user)
     db.session.commit()
 
+class TrackedStock(db.Model):
+    __tablename__ = 'trackedstocks'
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), primary_key = True)
+    stock_code = db.Column(db.Text(), primary_key = True)
+    
+    def __init__(self, user_id, stock_code):
+        self.user_id = user_id
+        self.stock_code = stock_code
+
+def track_stock(user_id, stock_code):
+    new_tracking = TrackedStock(user_id, stock_code)
+    
+    db.session.add(new_tracking)
+    db.session.commit()
+    
 def dbinit():
     add_user("Jack", "Bardoe", "jackbardoe@gmail.com", "Password1#")
+    track_stock(1, "AAPL")
+    track_stock(1, "GOOGL")
+    track_stock(1, "AMZN")
+    

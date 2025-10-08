@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import useAuthenticated from "../components/hooks/useAuthenticated";
 import { useNavigate } from "react-router-dom";
 import TopBar from "../components/TopBar";
+import TrackedStocksMenu from "../components/home/TrackedStocksMenu";
 
 const Home = () => {
 	const containerRef = useRef<HTMLDivElement>(null);
@@ -57,9 +58,10 @@ const Home = () => {
 						style={{ height: `${topHeight}px` }}
 						className="overflow-auto bg-gray-50 dark:bg-gray-900 p-4"
 					>
+						<TrackedStocksMenu />
 						<button
 							style={{
-								right: `calc(1% + ${rightWidth}px)`,
+								right: `calc(4% + ${rightWidth}px)`,
 								bottom: `calc(95% - ${topHeight}px)`,
 							}}
 							className="text-white rounded-full absolute cursor-pointer bg-indigo-600 hover:bg-indigo-800 active:bg-indigo-950 dark:bg-indigo-500 dark:hover:bg-indigo-700 dark:active:bg-indigo-900 text-4xl font-bold px-[0.7%] pb-[0.4%] hover:scale-[110%] active:scale-[97%]"
