@@ -1,6 +1,6 @@
 import { useState } from "react";
 import LogoutButton from "./login/LogoutButton";
-import { Link } from "react-router-dom";
+import { Link, redirect, useNavigate } from "react-router-dom";
 
 interface MenuProps {
 	home: boolean;
@@ -8,6 +8,7 @@ interface MenuProps {
 
 const TopBar = ({ home }: MenuProps) => {
 	const [accountMenuOpen, setAccountMenuOpen] = useState(false);
+	const navigate = useNavigate();
 
 	return (
 		<>
@@ -21,6 +22,17 @@ const TopBar = ({ home }: MenuProps) => {
 						<img
 							src="../public/user.png"
 							className="size-8 rounded-full bg-gray-800 outline -outline-offset-1 outline-white/10"
+						></img>
+					</button>
+				)}
+				{home && (
+					<button
+						onClick={() => navigate("/")}
+						className="absolute left-5 rounded-lg py-1 text-center transition-all hover:cursor-pointer"
+					>
+						<img
+							src="../public/home.png"
+							className="size-8 rounded-full"
 						></img>
 					</button>
 				)}
