@@ -35,9 +35,21 @@ class TrackedStock(db.Model):
         self.stock_code = stock_code
 
 def track_stock(user_id, stock_code):
+    if TrackedStock.query.filter_by(user_id = user_id, stock_code = stock_code).first():
+        return
+
     new_tracking = TrackedStock(user_id, stock_code)
     
     db.session.add(new_tracking)
+    db.session.commit()
+
+def untrack_stock(user_id, stock_code):
+    row = TrackedStock.query.filter_by(user_id = user_id, stock_code = stock_code).first()
+
+    if not row:
+        return
+
+    db.session.delete(row)
     db.session.commit()
     
 def dbinit():

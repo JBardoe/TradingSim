@@ -18,11 +18,11 @@ const StockPanel = ({ name, handleOpenWindow }: StockPanelProps) => {
 				if (res.data.code !== name) {
 					return;
 				}
-				setAvg(res.data.avg);
-				setCurr(res.data.current);
+				setAvg(res.data.avg ?? null);
+				setCurr(res.data.current ?? null);
 			})
 			.catch((err) => console.error(err));
-	}, [setAvg, setCurr]);
+	}, [name, setAvg, setCurr]);
 
 	return (
 		<div

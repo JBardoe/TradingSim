@@ -9,7 +9,7 @@ import os
 import yfinance as yf
 from datetime import datetime, timedelta
 
-from db_schema import db, User, add_user, dbinit, TrackedStock
+from db_schema import db, User, add_user, dbinit, TrackedStock, track_stock, untrack_stock
 
 app = Flask(__name__, static_folder="build", static_url_path="/")
 app.secret_key = "secretKey"
@@ -95,7 +95,7 @@ def	get_stock_panel():
 	if not stock_code:
 		return jsonify({"error": "Missing 'stock' query parameter"}), 400
 
-	data = yf.download(stock_code, interval="1d", period="6mo")
+	data = yf.Ticker(stock_code).history(period="6mo", interval="1d")
 
 	if data.empty:
 		return jsonify({"error": f"No data found for {stock_code}"}), 404
@@ -111,10 +111,11 @@ def	get_stock_panel():
 
 	if pd.isna(avg_price):
 		return jsonify({
+			"code": stock_code,
 			"error": "Not enough data to compute 100-day average",
 			"current": float(current_price)
 		}), 200
-
+	
 	return jsonify({
 		"code": stock_code,
 		"avg": float(avg_price),
@@ -141,8 +142,6 @@ def get_stock_averages():
 	stock_code = json.get("code")
 	day_interval = json.get("dayInterval")
 
-	print("Received request ", json)
-
 	if not stock_code:
 		return jsonify({"error": "Missing required query parameters"}), 400
 
@@ -164,10 +163,8 @@ def get_stock_averages():
 	})
 
 @app.route("/api/getTrackedStocks", methods=["POST"])
+@login_required
 def get_tracked_stocks():
-	if not current_user.is_authenticated:
-		return []
-
 	stock_codes = []
 
 	rows = TrackedStock.query.with_entities(TrackedStock.stock_code).filter_by(user_id = current_user.id).all()
@@ -178,7 +175,32 @@ def get_tracked_stocks():
 	return jsonify({
 		"stocks": stock_codes
 	})
-    
+ 
+@app.route("/api/addTrackedStock", methods=["POST"])
+@login_required
+def add_tracked_stock():
+	json = request.get_json()
+	stock_code = json.get("code")
+
+	if not stock_code:
+		return jsonify({"error": "Missing required query parameters"}), 400
+
+	track_stock(current_user.id, stock_code)
+
+	return jsonify({"message": "Stock tracked successfully"}), 200
+
+@app.route("/api/removeTrackedStock", methods=["POST"])
+@login_required
+def remove_tracked_stock():
+	json = request.get_json()
+	stock_code = json.get("code")
+
+	if not stock_code:
+		return jsonify({"error": "Missing required query parameters"}), 400
+	
+	untrack_stock(current_user.id, stock_code)
+
+	return jsonify({"error": "Stock untracked successfully"}), 200
 
 @app.route('/')
 @app.route('/<path:path>')
