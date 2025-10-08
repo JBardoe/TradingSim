@@ -165,16 +165,22 @@ def get_stock_averages():
 @app.route("/api/getTrackedStocks", methods=["POST"])
 @login_required
 def get_tracked_stocks():
+	
 	stock_codes = []
 
 	rows = TrackedStock.query.with_entities(TrackedStock.stock_code).filter_by(user_id = current_user.id).all()
 
 	for row in rows:
 		stock_codes.append(row[0])
+
+	if request.get_json() and request.get_json().get("code"):
+		return jsonify({
+			"tracked": request.get_json().get("code") in stock_codes
+		}), 200
 	
 	return jsonify({
 		"stocks": stock_codes
-	})
+	}), 200
  
 @app.route("/api/addTrackedStock", methods=["POST"])
 @login_required
@@ -200,7 +206,7 @@ def remove_tracked_stock():
 	
 	untrack_stock(current_user.id, stock_code)
 
-	return jsonify({"error": "Stock untracked successfully"}), 200
+	return jsonify({"message": "Stock untracked successfully"}), 200
 
 @app.route('/')
 @app.route('/<path:path>')

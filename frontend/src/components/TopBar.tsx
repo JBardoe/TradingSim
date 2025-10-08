@@ -1,6 +1,6 @@
 import { useState } from "react";
 import LogoutButton from "./login/LogoutButton";
-import { Link, redirect, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 interface MenuProps {
 	home: boolean;
@@ -56,14 +56,6 @@ const TopBar = ({ home }: MenuProps) => {
 					</div>
 					<hr className="w-full text-gray-400 rounded-full my-2" />
 					<div className="flex flex-col items-center w-full">
-						{home && (
-							<Link
-								to="/"
-								className="w-full rounded-lg py-1 text-center hover:bg-indigo-300 active:bg-indigo-500 dark:hover:bg-indigo-700 dark:active:bg-indigo-900 transition-all"
-							>
-								Home
-							</Link>
-						)}
 						<LogoutButton />
 					</div>
 				</div>
