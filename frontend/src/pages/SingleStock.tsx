@@ -2,6 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import TrackingToggle from "../components/singlestock/TrackingToggle";
+import TopBar from "../components/TopBar";
 
 const SingleStock = () => {
 	const { stockCode } = useParams<{ stockCode: string }>();
@@ -29,7 +30,12 @@ const SingleStock = () => {
 
 	return (
 		<>
-			<div>{stockCode}</div>
+			<TopBar home={false} />
+			<div className="w-full h-full">
+				<h1 className="text-center font-bold text-4xl mt-5">
+					{stockCode}
+				</h1>
+			</div>
 			<TrackingToggle
 				tracked={tracked}
 				setTracked={setTracked}

@@ -38,7 +38,7 @@ const TrackingToggle = ({ tracked, setTracked, code }: TrackingToggleProps) => {
 
 	return (
 		<button
-			className="text-white rounded-full fixed bottom-8 right-10 cursor-pointer bg-indigo-600 hover:bg-indigo-800 active:bg-indigo-950 dark:bg-indigo-500 dark:hover:bg-indigo-700 dark:active:bg-indigo-900 text-2xl font-bold px-[2%] py-[1%] hover:scale-[110%] active:scale-[97%]"
+			className="text-white rounded-full fixed bottom-8 left-10 cursor-pointer bg-indigo-600 hover:bg-indigo-800 active:bg-indigo-950 dark:bg-indigo-500 dark:hover:bg-indigo-700 dark:active:bg-indigo-900 text-2xl font-bold px-[2%] py-[1%] hover:scale-[110%] active:scale-[97%]"
 			onClick={() => {
 				setBlocked(true);
 				toggleTracking();
