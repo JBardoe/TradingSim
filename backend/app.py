@@ -224,15 +224,19 @@ def run_algorithm():
 	stock_code = json.get("code")
 	algorithm = json.get("strategy")
 	interval = json.get("interval")
-	start_timestamp = json.get("start");
+	start_timestamp = json.get("start")
 
 	if not stock_code or not algorithm or not interval or not start_timestamp:
 		return jsonify({"error": "Missing required query parameters"}), 400
 	
 	start_time = datetime.fromtimestamp(start_timestamp)
-	
-	(report, result) = past_trend_following(stock_code=stock_code, interval=interval, start_time = start_time)
 
+	match algorithm:
+		case "Trend Following": 
+			(report, result) = past_trend_following(stock_code=stock_code, interval=interval, start_time = start_time)
+		case _:
+			return jsonify({"error": "Unknown Algorithm"}), 400
+	
 	return jsonify({
 		"report":report, 
 		"result":result
