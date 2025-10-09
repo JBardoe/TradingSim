@@ -1,8 +1,9 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import TrackingToggle from "../components/singlestock/TrackingToggle";
 import TopBar from "../components/TopBar";
+import DataOutput from "../components/singlestock/DataOutput";
 
 const SingleStock = () => {
 	const { stockCode } = useParams<{ stockCode: string }>();
@@ -35,6 +36,18 @@ const SingleStock = () => {
 				<h1 className="text-center font-bold text-4xl mt-5">
 					{stockCode}
 				</h1>
+				<Link
+					to="/allStocks"
+					className="text-xl font-semibold absolute top-14 right-5"
+				>
+					To All Stocks
+				</Link>
+				<div className="w-full h-full flex flex-row">
+					<div className="w-[50%] h-fit">
+						<DataOutput stockCode={stockCode} />
+					</div>
+					<div className="w-[50%] h-fit"></div>
+				</div>
 			</div>
 			<TrackingToggle
 				tracked={tracked}
