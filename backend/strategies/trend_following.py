@@ -2,7 +2,9 @@ import yfinance as yf
 import pandas as pd
 from datetime import timedelta, datetime
 
-def past_trend_following(stock_code:str, interval:str, start_time:datetime, end_time=datetime.now(), volume=1):
+def past_trend_following(stock_code, interval, start_time, end_time=datetime.now(), volume=1):
+	report = []
+
 	match interval:
 		case "day": 
 			interval = "1d"
@@ -37,4 +39,4 @@ def past_trend_following(stock_code:str, interval:str, start_time:datetime, end_
 	final_close = float(backtest_data["Close"].values[len(backtest_data["Close"]) - 1][0]) * volume
 	profit += (final_close * volume) - entered_price if invested else entered_price - (final_close * volume)
  
-	return profit
+	return (report, profit)

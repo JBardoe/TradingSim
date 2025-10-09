@@ -4,6 +4,7 @@ import { Link, useParams } from "react-router-dom";
 import TrackingToggle from "../components/singlestock/TrackingToggle";
 import TopBar from "../components/TopBar";
 import DataOutput from "../components/singlestock/DataOutput";
+import StrategyPanel from "../components/singlestock/StrategyPanel";
 
 const SingleStock = () => {
 	const { stockCode } = useParams<{ stockCode: string }>();
@@ -46,7 +47,9 @@ const SingleStock = () => {
 					<div className="w-[50%] h-fit">
 						<DataOutput stockCode={stockCode} />
 					</div>
-					<div className="w-[50%] h-fit"></div>
+					<div className="w-[50%] h-fit">
+						{stockCode && <StrategyPanel stockCode={stockCode} />}
+					</div>
 				</div>
 			</div>
 			<TrackingToggle
