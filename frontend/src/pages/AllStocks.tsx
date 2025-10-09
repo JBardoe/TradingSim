@@ -4,7 +4,7 @@ import TopBar from "../components/TopBar";
 const AllStocks = () => {
 	return (
 		<>
-			<TopBar home={true} />
+			<TopBar home={false} />
 			<StockMenu />
 		</>
 	);

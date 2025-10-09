@@ -45,7 +45,7 @@ const Home = () => {
 
 	return (
 		<>
-			<TopBar home={false} />
+			<TopBar home={true} />
 			<div
 				ref={containerRef}
 				className="flex h-[94vh] w-screen bg-white dark:bg-gray-900"

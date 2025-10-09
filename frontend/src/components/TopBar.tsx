@@ -12,7 +12,7 @@ const TopBar = ({ home }: MenuProps) => {
 
 	return (
 		<>
-			<div className="sticky top-0 w-full shadow-md shadow-gray-500 dark:shadow-black h-[6vh] dark:bg-gray-800 flex items-center px-[2vw] flex-row-reverse">
+			<div className="sticky top-0 w-full shadow-md shadow-gray-500 dark:shadow-black h-[6vh] dark:bg-gray-800 flex items-center px-[2vw] flex-row-reverse z-50">
 				{!accountMenuOpen && (
 					<button
 						onClick={() => setAccountMenuOpen(!accountMenuOpen)}
@@ -25,7 +25,7 @@ const TopBar = ({ home }: MenuProps) => {
 						></img>
 					</button>
 				)}
-				{home && (
+				{!home && (
 					<button
 						onClick={() => navigate("/")}
 						className="absolute left-5 rounded-lg py-1 text-center transition-all hover:cursor-pointer"
