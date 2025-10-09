@@ -148,7 +148,6 @@ def get_stock_averages():
 	interval = "1d" if day_interval else "1m"
 	period = datetime.now() - timedelta(days=(150 if day_interval else 1))
 
-
 	data = yf.download(stock_code, interval=interval, start=period)
 
 	if data.empty:
@@ -156,11 +155,14 @@ def get_stock_averages():
 
 	data["MA100"] = data["Close"].rolling(window=100).mean()
 	data["MA50"] = data["Close"].rolling(window=50).mean()
+	
+	if pd.isna(data["MA100"].iloc[-1]):
+		return jsonify({"fifty": float(data["MA50"].iloc[-1])}), 200
 
 	return jsonify({
 		"fifty": float(data["MA50"].iloc[-1]),
 		"hundred": float(data["MA100"].iloc[-1])
-	})
+	}),200
 
 @app.route("/api/getTrackedStocks", methods=["POST"])
 @login_required

@@ -88,7 +88,10 @@ const StockWindow = ({ name, onClose }: StockWindowProps) => {
 								: "bg-gray-300 dark:bg-gray-700 cursor-pointer ") +
 							"absolute top-3 left-[25%] w-[20%] py-1 rounded-lg text-xl"
 						}
-						onClick={() => setDayInterval(true)}
+						onClick={() => {
+							setDayInterval(true);
+							setData([]);
+						}}
 					>
 						Day
 					</button>
@@ -99,7 +102,10 @@ const StockWindow = ({ name, onClose }: StockWindowProps) => {
 								: "bg-gray-300 dark:bg-gray-700 cursor-pointer ") +
 							"absolute top-3 left-[55%] w-[20%] py-1 rounded-lg text-xl"
 						}
-						onClick={() => setDayInterval(false)}
+						onClick={() => {
+							setDayInterval(false);
+							setData([]);
+						}}
 					>
 						Minute
 					</button>
@@ -121,14 +127,28 @@ const StockWindow = ({ name, onClose }: StockWindowProps) => {
 						</span>
 					)}
 					<div className="w-full h-fit mt-[2%] font-semibold text-xl flex flex-col items-center justify-center">
-						<span>
-							50 {dayInterval ? "Day" : "Minute"} Average: $
-							{fiftyAvg?.toFixed(2)}
-						</span>
-						<span className="mt-[2%]">
-							100 {dayInterval ? "Day" : "Minute"} Average: $
-							{hundredAvg?.toFixed(2)}
-						</span>
+						{fiftyAvg ? (
+							<span>
+								50 {dayInterval ? "Day" : "Minute"} Average: $
+								{fiftyAvg?.toFixed(2)}
+							</span>
+						) : (
+							<span>
+								Cannot calculate fifty{" "}
+								{dayInterval ? "day" : "minute"} average.
+							</span>
+						)}
+						{hundredAvg ? (
+							<span className="mt-[2%]">
+								100 {dayInterval ? "Day" : "Minute"} Average: $
+								{hundredAvg?.toFixed(2)}
+							</span>
+						) : (
+							<span>
+								Cannot calculate hundred{" "}
+								{dayInterval ? "day" : "minute"} average.
+							</span>
+						)}
 					</div>
 				</div>
 			</div>
