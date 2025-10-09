@@ -10,6 +10,7 @@ import yfinance as yf
 from datetime import datetime, timedelta
 
 from db_schema import db, User, add_user, dbinit, TrackedStock, track_stock, untrack_stock
+from strategies.trend_following import past_trend_following
 
 app = Flask(__name__, static_folder="build", static_url_path="/")
 app.secret_key = "secretKey"
@@ -28,6 +29,8 @@ def resetDb():
 		dbinit()
 
 resetDb()#Database is reset when the app is run
+
+algs = ["Trend Following"]
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -209,6 +212,31 @@ def remove_tracked_stock():
 	untrack_stock(current_user.id, stock_code)
 
 	return jsonify({"message": "Stock untracked successfully"}), 200
+
+@app.route("/api/getAlgorithms", methods=["GET"])
+def get_algorithms():
+	return jsonify({"algorithms": algs}), 200
+
+@app.route("/api/runAlgorithm", methods=["POST"])
+@login_required
+def run_algorithm():
+	json = request.get_json()
+	stock_code = json.get("code")
+	algorithm = json.get("strategy")
+	interval = json.get("interval")
+	start_timestamp = json.get("start");
+
+	if not stock_code or not algorithm or not interval or not start_timestamp:
+		return jsonify({"error": "Missing required query parameters"}), 400
+	
+	start_time = datetime.fromtimestamp(start_timestamp)
+	
+	(report, result) = past_trend_following(stock_code=stock_code, interval=interval, start_time = start_time)
+
+	return jsonify({
+		"report":report, 
+		"result":result
+	}),200
 
 @app.route('/')
 @app.route('/<path:path>')
