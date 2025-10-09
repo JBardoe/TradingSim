@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import StockWindowGraph from "../utils/StockGraph";
+import StockWindowGraph from "../utils/StockWindowGraph";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
