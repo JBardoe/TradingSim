@@ -49,7 +49,6 @@ const DataOutput = ({ stockCode }: DataOutputProps) => {
 				}
 			)
 			.then((res) => {
-				console.log(res.data.fifty);
 				setFiftyAvg(res.data.fifty);
 				setHundredAvg(res.data.hundred);
 			})

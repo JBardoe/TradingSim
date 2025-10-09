@@ -28,7 +28,7 @@ const TopBar = ({ home }: MenuProps) => {
 				{!home && (
 					<button
 						onClick={() => navigate("/")}
-						className="absolute left-5 rounded-lg py-1 text-center transition-all hover:cursor-pointer"
+						className="absolute left-5 rounded-lg py-1 text-center transition-all cursor-pointer"
 					>
 						<img
 							src="../public/home.png"
