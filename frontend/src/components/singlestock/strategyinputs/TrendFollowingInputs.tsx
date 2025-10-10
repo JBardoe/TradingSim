@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import StartDateInput from "./StartDateInput";
+import EndDateInput from "./EndDateInput";
 
 interface TrendFollowingInputProps {
 	setOptions: React.Dispatch<React.SetStateAction<any>>;
@@ -9,13 +10,23 @@ const TrendFollowingInputs = ({ setOptions }: TrendFollowingInputProps) => {
 	const [start, setStart] = useState(0);
 	const [interval, setInterval] = useState("day");
 	const [short, setShort] = useState(true);
+	const [end, setEnd] = useState<number | null>(null);
 
 	useEffect(() => {
-		setOptions({
-			start: start,
-			interval: interval,
-			short: short,
-		});
+		if (end) {
+			setOptions({
+				start: start,
+				interval: interval,
+				short: short,
+				end: end,
+			});
+		} else {
+			setOptions({
+				start: start,
+				interval: interval,
+				short: short,
+			});
+		}
 	}, [start, interval, short]);
 
 	return (
@@ -71,11 +82,8 @@ const TrendFollowingInputs = ({ setOptions }: TrendFollowingInputProps) => {
 					Short When 50 Avg {"<"} 100 Avg
 				</label>
 			</div>
-			<StartDateInput
-				interval={interval}
-				setStart={setStart}
-				setOptions={setOptions}
-			/>
+			<StartDateInput interval={interval} setStart={setStart} />
+			<EndDateInput interval={interval} start={start} setEnd={setEnd} />
 		</div>
 	);
 };

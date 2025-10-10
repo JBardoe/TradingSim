@@ -3,7 +3,6 @@ import { useState, useEffect } from "react";
 interface StartDateInputProps {
 	interval: string;
 	setStart: (timestamp: number) => void;
-	setOptions: React.Dispatch<React.SetStateAction<any>>;
 }
 
 export const StartDateInput = ({ interval, setStart }: StartDateInputProps) => {
