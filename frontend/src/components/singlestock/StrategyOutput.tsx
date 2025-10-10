@@ -5,8 +5,9 @@ interface StrategyOutputProps {
 }
 
 const StrategyOutput = ({ error, report, result }: StrategyOutputProps) => {
+	console.log(report);
 	return (
-		<div className="w-full h-fit bg-gray-300 dark:bg-gray-700">
+		<div className="w-full h-fit bg-gray-300 dark:bg-gray-700 rounded-xl">
 			<h1 className="text-center text-2xl font-bold">Output:</h1>
 			{error ? (
 				<p className="text-red-500 text-center text-lg">
@@ -17,9 +18,11 @@ const StrategyOutput = ({ error, report, result }: StrategyOutputProps) => {
 				<>
 					{report.length <= 5 ? (
 						report.map((line, index) => {
-							<p className="text-center text-md" key={index}>
-								{line}
-							</p>;
+							return (
+								<p className="text-center text-md" key={index}>
+									{line}
+								</p>
+							);
 						})
 					) : (
 						<p className="text-center text-md">

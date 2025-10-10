@@ -9,7 +9,7 @@ const StrategyDescription = ({ strategy }: StrategyDescriptionProps) => {
 			<p className="text-center text-md">
 				50 avg {">"} 100 avg {"=>"} Long
 				<br />
-				50 avg {"<"} 100 avg {"=>"} Short
+				50 avg {"<"} 100 avg {"=>"} Sell/Short
 			</p>
 		</div>
 	);

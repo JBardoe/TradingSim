@@ -12,7 +12,7 @@ const StrategyPanel = ({ stockCode }: StrategyPanelProps) => {
 	const [open, setOpen] = useState(false);
 	const [strategies, setStrategies] = useState([]);
 	const [selected, setSelected] = useState(0);
-	const [report, setReport] = useState([]);
+	const [report, setReport] = useState<string[]>([]);
 	const [result, setResult] = useState(0);
 	const [error, setError] = useState(false);
 
@@ -67,15 +67,18 @@ const StrategyPanel = ({ stockCode }: StrategyPanelProps) => {
 					<RunButton
 						strategy={strategies[selected]}
 						stockCode={stockCode}
+						options={{
+							interval: true ? "day" : "minute",
+							start: 1748736000,
+							short: true,
+						}} //TODO change to inputted parameters
 						setError={setError}
 						setReport={setReport}
 						setResult={setResult}
-						dayInterval={true} //TODO change to inputted parameter
-						startTime={1755719400} //TODO change to inputted parameter
 					/>
 				</div>
 				{report.length > 0 && (
-					<div className="w-full h-fit px-10 py-3">
+					<div className="w-full h-fit px-10 py-5">
 						<StrategyOutput
 							error={error}
 							report={report}

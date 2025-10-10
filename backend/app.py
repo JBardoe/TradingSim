@@ -10,7 +10,7 @@ import yfinance as yf
 from datetime import datetime, timedelta
 
 from db_schema import db, User, add_user, dbinit, TrackedStock, track_stock, untrack_stock
-from strategies.trend_following import past_trend_following
+from strategies.trend_following import trend_following, long_trend_following
 
 app = Flask(__name__, static_folder="build", static_url_path="/")
 app.secret_key = "secretKey"
@@ -223,17 +223,20 @@ def run_algorithm():
 	json = request.get_json()
 	stock_code = json.get("code")
 	algorithm = json.get("strategy")
-	interval = json.get("interval")
-	start_timestamp = json.get("start")
+	options = json.get("options")
 
-	if not stock_code or not algorithm or not interval or not start_timestamp:
+	if not stock_code or not algorithm or not options:
 		return jsonify({"error": "Missing required query parameters"}), 400
 	
-	start_time = datetime.fromtimestamp(start_timestamp)
+	start_time = datetime.fromtimestamp(options.get("start"))
+	interval = options.get("interval")
 
 	match algorithm:
 		case "Trend Following": 
-			(report, result) = past_trend_following(stock_code=stock_code, interval=interval, start_time = start_time)
+			if options.get("short"):
+				(report, result) = trend_following(stock_code=stock_code, interval=interval, start_time = start_time)
+			else:
+				(report, result) = long_trend_following(stock_code=stock_code, interval=interval, start_time = start_time)
 		case _:
 			return jsonify({"error": "Unknown Algorithm"}), 400
 	

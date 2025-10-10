@@ -4,9 +4,8 @@ import { useState } from "react";
 interface RunButtonProps {
 	strategy: string;
 	stockCode: string;
-	dayInterval: boolean;
-	startTime: number;
-	setReport: React.Dispatch<React.SetStateAction<never[]>>;
+	options: any; //TODO
+	setReport: React.Dispatch<React.SetStateAction<string[]>>;
 	setResult: React.Dispatch<React.SetStateAction<number>>;
 	setError: React.Dispatch<React.SetStateAction<boolean>>;
 }
@@ -14,8 +13,7 @@ interface RunButtonProps {
 const RunButton = ({
 	strategy,
 	stockCode,
-	dayInterval,
-	startTime,
+	options,
 	setReport,
 	setResult,
 	setError,
@@ -29,8 +27,7 @@ const RunButton = ({
 				{
 					code: stockCode,
 					strategy: strategy,
-					interval: dayInterval ? "day" : "minute",
-					start: startTime,
+					options: options,
 				},
 				{
 					withCredentials: true,
