@@ -4,21 +4,22 @@ import { useNavigate } from "react-router-dom";
 
 interface MenuProps {
 	home: boolean;
+	email: string;
 }
 
-const TopBar = ({ home }: MenuProps) => {
+const TopBar = ({ home, email }: MenuProps) => {
 	const [accountMenuOpen, setAccountMenuOpen] = useState(false);
 	const navigate = useNavigate();
 
 	return (
 		<>
-			<div className="sticky top-0 w-full shadow-md shadow-gray-500 dark:shadow-black h-[6vh] dark:bg-gray-800 flex items-center px-[2vw] flex-row-reverse z-50">
+			<div className="sticky top-0 w-full shadow-md shadow-gray-500 dark:shadow-black h-[6vh] dark:bg-gray-800 flex items-center px-[2vw] flex-row-reverse z-20">
 				{!accountMenuOpen && (
 					<button
 						onClick={() => setAccountMenuOpen(!accountMenuOpen)}
 						className="cursor-pointer flex flex-row gap-3 w-fit items-center"
 					>
-						<p className="font-semibold">user.mail.com</p>
+						<p className="font-semibold">{email}</p>
 						<img
 							src="../public/user.png"
 							className="size-8 rounded-full bg-gray-800 outline -outline-offset-1 outline-white/10"
@@ -38,10 +39,10 @@ const TopBar = ({ home }: MenuProps) => {
 				)}
 			</div>
 			{accountMenuOpen && (
-				<div className="fixed top-[1vh] right-[2vw] w-[20vw] rounded-2xl bg-gray-300 dark:bg-gray-600 p-[1%] flex flex-col items-center">
+				<div className="fixed top-[1vh] right-[2vw] w-[20vw] rounded-2xl bg-gray-300 dark:bg-gray-600 p-[1%] flex flex-col items-center z-30">
 					<div className="w-full">
 						<div className="w-full flex flex-row justify-center items-center gap-2">
-							<p className="font-semibold">user.mail.com</p>
+							<p className="font-semibold">{email}</p>
 							<img
 								src="../public/user.png"
 								className="size-8 rounded-full bg-gray-800 outline -outline-offset-1 outline-white/10"

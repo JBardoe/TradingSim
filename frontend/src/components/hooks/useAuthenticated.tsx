@@ -1,33 +1,36 @@
+import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const useAuthenticated = (redirectIfUnauthorised = true) => {
 	const [authenticated, setAuthenticated] = useState(false);
+	const [email, setEmail] = useState("");
 	const navigate = useNavigate();
 
 	useEffect(() => {
-		const checkAuth = async () => {
-			try {
-				const resp = await fetch(
-					"http://localhost:5000/api/checkAuth",
-					{
-						credentials: "include",
-					}
-				); //TODO change
-				if (resp.status === 200) {
+		axios
+			.post(
+				"http://localhost:5000/api/checkAuth",
+				{},
+				{
+					withCredentials: true,
+				}
+			)
+			.then((res) => {
+				if (res.status === 200) {
 					setAuthenticated(true);
+					setEmail(res.data.email);
 				} else if (redirectIfUnauthorised) {
 					navigate("/login");
 				}
-			} catch (err) {
+			})
+			.catch((err) => {
+				console.error(err);
 				navigate("/login");
-			}
-		};
-
-		checkAuth();
+			});
 	}, [navigate, redirectIfUnauthorised]);
 
-	return { authenticated };
+	return { authenticated, email };
 };
 
 export default useAuthenticated;

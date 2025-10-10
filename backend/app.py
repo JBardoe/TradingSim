@@ -72,10 +72,10 @@ def register():
 
 	return jsonify("Registration Successful"), 200
 
-@app.route("/api/checkAuth", methods=['GET', 'POST'])
+@app.route("/api/checkAuth", methods=['POST'])
 def check_auth():
 	if current_user.is_authenticated:
-		return jsonify(message="User Authenticated"), 200
+		return jsonify(message="User Authenticated", email=current_user.email), 200
 	else:
 		return jsonify(message="User Unauthorised"), 401
 

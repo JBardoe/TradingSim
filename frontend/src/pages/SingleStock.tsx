@@ -5,10 +5,12 @@ import TrackingToggle from "../components/singlestock/TrackingToggle";
 import TopBar from "../components/TopBar";
 import DataOutput from "../components/singlestock/DataOutput";
 import StrategyPanel from "../components/singlestock/StrategyPanel";
+import useAuthenticated from "../components/hooks/useAuthenticated";
 
 const SingleStock = () => {
 	const { stockCode } = useParams<{ stockCode: string }>();
 	const [tracked, setTracked] = useState(false);
+	const { authenticated, email } = useAuthenticated();
 
 	useEffect(() => {
 		axios
@@ -30,9 +32,11 @@ const SingleStock = () => {
 			.catch((err) => console.error(err));
 	}, [setTracked]);
 
+	if (!authenticated) return null;
+
 	return (
 		<>
-			<TopBar home={false} />
+			<TopBar email={email} home={false} />
 			<div className="w-full h-full">
 				<h1 className="text-center font-bold text-4xl mt-5">
 					{stockCode}

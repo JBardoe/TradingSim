@@ -11,7 +11,7 @@ const Home = () => {
 	const [isDraggingVertical, setIsDraggingVertical] = useState(false);
 	const [isDraggingHorizontal, setIsDraggingHorizontal] = useState(false);
 	const navigate = useNavigate();
-	const { authenticated } = useAuthenticated();
+	const { authenticated, email } = useAuthenticated();
 
 	const startVerticalDrag = () => setIsDraggingVertical(true);
 	const startHorizontalDrag = () => setIsDraggingHorizontal(true);
@@ -45,7 +45,7 @@ const Home = () => {
 
 	return (
 		<>
-			<TopBar home={true} />
+			<TopBar email={email} home={true} />
 			<div
 				ref={containerRef}
 				className="flex h-[94vh] w-screen bg-white dark:bg-gray-900"
