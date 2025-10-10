@@ -28,7 +28,7 @@ const StrategyOutput = ({ error, report, result }: StrategyOutputProps) => {
 						<p className="text-center text-md">
 							{report[0]} <br />
 							{report[1]} <br />
-							...
+							<span className="text-3xl">• • •</span> <br />
 							{report[report.length - 2]} <br />
 							{report[report.length - 1]} <br />
 						</p>

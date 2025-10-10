@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import StrategyDescription from "./StrategyDescription";
 import RunButton from "./RunButton";
 import StrategyOutput from "./StrategyOutput";
+import StrategyInput from "./StrategyInput";
 
 interface StrategyPanelProps {
 	stockCode: string;
@@ -15,6 +16,7 @@ const StrategyPanel = ({ stockCode }: StrategyPanelProps) => {
 	const [report, setReport] = useState<string[]>([]);
 	const [result, setResult] = useState(0);
 	const [error, setError] = useState(false);
+	const [options, setOptions] = useState(null);
 
 	useEffect(() => {
 		axios
@@ -63,15 +65,17 @@ const StrategyPanel = ({ stockCode }: StrategyPanelProps) => {
 				<div className="w-full h-fit p-10 pt-6">
 					<StrategyDescription strategy={strategies[selected]} />
 				</div>
+				<div className="w-full h-fit p-10 pt-6">
+					<StrategyInput
+						strategy={strategies[selected]}
+						setOptions={setOptions}
+					/>
+				</div>
 				<div className="w-full h-fit flex flex-col items-center">
 					<RunButton
 						strategy={strategies[selected]}
 						stockCode={stockCode}
-						options={{
-							interval: true ? "day" : "minute",
-							start: 1748736000,
-							short: true,
-						}} //TODO change to inputted parameters
+						options={options}
 						setError={setError}
 						setReport={setReport}
 						setResult={setResult}

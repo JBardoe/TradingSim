@@ -12,7 +12,7 @@ def long_trend_following(stock_code, interval, start_time, end_time=datetime.now
 			time_fmt = "%d/%m/%y"
 		case "minute": 
 			interval = "1m"
-			period = start_time - timedelta(days=5)
+			period = start_time - timedelta(days=1)
 			time_fmt = "%d/%m-%H:%M"
 		case _:
 			raise ValueError("Interval must be 'day' or 'minute'") 
@@ -76,7 +76,7 @@ def trend_following(stock_code, interval, start_time, end_time=datetime.now(), v
 			time_fmt = "%d/%m/%y"
 		case "minute":
 			interval = "1m"
-			period = start_time - timedelta(days=5)
+			period = start_time - timedelta(days=1)
 			time_fmt = "%d/%m-%H:%M"
 		case _:
 			raise ValueError("Interval must be 'day' or 'minute'")
