@@ -2,6 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import StrategyDescription from "./StrategyDescription";
 import RunButton from "./RunButton";
+import StrategyOutput from "./StrategyOutput";
 
 interface StrategyPanelProps {
 	stockCode: string;
@@ -73,6 +74,15 @@ const StrategyPanel = ({ stockCode }: StrategyPanelProps) => {
 						startTime={1755719400} //TODO change to inputted parameter
 					/>
 				</div>
+				{report.length > 0 && (
+					<div className="w-full h-fit px-10 py-3">
+						<StrategyOutput
+							error={error}
+							report={report}
+							result={result}
+						/>
+					</div>
+				)}
 			</div>
 		)
 	);
