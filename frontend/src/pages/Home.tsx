@@ -3,6 +3,7 @@ import useAuthenticated from "../components/hooks/useAuthenticated";
 import { useNavigate } from "react-router-dom";
 import TopBar from "../components/TopBar";
 import TrackedStocksMenu from "../components/home/TrackedStocksMenu";
+import StrategiesMenu from "../components/home/StrategiesMenu";
 
 const Home = () => {
 	const containerRef = useRef<HTMLDivElement>(null);
@@ -77,7 +78,7 @@ const Home = () => {
 					/>
 
 					<div className="flex-1 overflow-auto bg-gray-100 dark:bg-gray-800 p-4">
-						<p>Used Strategies</p>
+						<StrategiesMenu />
 					</div>
 				</div>
 

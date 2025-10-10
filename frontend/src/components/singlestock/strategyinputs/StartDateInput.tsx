@@ -56,7 +56,7 @@ export const StartDateInput = ({ interval, setStart }: StartDateInputProps) => {
 					min={minDate}
 					max={todayISO}
 					onChange={(e) => setDate(e.target.value)}
-					className="border rounded-lg px-3 py-1.5 shadow-sm focus:ring-2 focus:ring-blue-400 focus:outline-none bg-gray-200 dark:bg-gray-600"
+					className="border rounded-lg px-3 py-1.5 shadow-sm focus:ring-2 focus:ring-blue-400 focus:outline-none bg-gray-200 dark:bg-gray-600 cursor-pointer"
 				/>
 				{interval === "minute" && (
 					<input
@@ -64,7 +64,7 @@ export const StartDateInput = ({ interval, setStart }: StartDateInputProps) => {
 						value={time}
 						max={maxTime}
 						onChange={(e) => setTime(e.target.value)}
-						className="border rounded-lg px-3 py-1.5 shadow-sm focus:ring-2 focus:ring-blue-400 focus:outline-none bg-gray-200 dark:bg-gray-600"
+						className="border rounded-lg px-3 py-1.5 shadow-sm focus:ring-2 focus:ring-blue-400 focus:outline-none bg-gray-200 dark:bg-gray-600 cursor-pointer"
 					/>
 				)}
 			</div>

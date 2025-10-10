@@ -25,7 +25,7 @@ const StrategyPanel = ({ stockCode }: StrategyPanelProps) => {
 				setStrategies(res.data.algorithms);
 			})
 			.catch((err) => console.error(err));
-	}, []);
+	}, [setStrategies]);
 
 	return (
 		strategies.length > 0 && (
