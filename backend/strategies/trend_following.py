@@ -83,7 +83,7 @@ def trend_following(stock_code, interval, start_time, end_time=datetime.now(), v
 
 	data = yf.download(stock_code, interval=interval, start=period, end=end_time)
 	if data.empty:
-		return ([], 0.0)
+		return (["No data found"], 0.0)
 
 	if isinstance(data.columns[0], tuple):
 		data.columns = [col[0].lower() for col in data.columns]

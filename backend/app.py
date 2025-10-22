@@ -11,6 +11,7 @@ from datetime import datetime, timedelta
 
 from db_schema import db, User, add_user, dbinit, TrackedStock, track_stock, untrack_stock
 from strategies.trend_following import trend_following, long_trend_following
+from strategies.mean_reversion import mean_reversion
 
 app = Flask(__name__, static_folder="build", static_url_path="/")
 app.secret_key = "secretKey"
@@ -30,7 +31,7 @@ def resetDb():
 
 resetDb()#Database is reset when the app is run
 
-algs = ["Trend Following"]
+algs = ["Trend Following", "Mean Reversion"]
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -231,12 +232,16 @@ def run_algorithm():
 	start_time = datetime.fromtimestamp(options.get("start"))
 	interval = options.get("interval")
 
+	end_time = datetime.fromtimestamp(options.get("end")) if options.get("end") else datetime.now()
+
 	match algorithm:
 		case "Trend Following": 
 			if options.get("short"):
-				(report, result) = trend_following(stock_code=stock_code, interval=interval, start_time = start_time)
+				(report, result) = trend_following(stock_code=stock_code, interval=interval, start_time = start_time, end_time=end_time)
 			else:
-				(report, result) = long_trend_following(stock_code=stock_code, interval=interval, start_time = start_time)
+				(report, result) = long_trend_following(stock_code=stock_code, interval=interval, start_time = start_time, end_time=end_time)
+		case "Mean Reversion":
+			(report, result) = mean_reversion(stock_code=stock_code, interval=interval, start_time=start_time, threshold=float(options.get("threshold")), end_time=end_time)
 		case _:
 			return jsonify({"error": "Unknown Algorithm"}), 400
 	
