@@ -2,14 +2,15 @@ import { useEffect, useState } from "react";
 import StartDateInput from "./StartDateInput";
 import EndDateInput from "./EndDateInput";
 
-interface MeanReversionInputsProps {
+interface MomentumInputsInputProps {
 	setOptions: React.Dispatch<React.SetStateAction<any>>;
 }
 
-const MeanReversionInputs = ({ setOptions }: MeanReversionInputsProps) => {
+const MomentumInputs = ({ setOptions }: MomentumInputsInputProps) => {
 	const [start, setStart] = useState(0);
 	const [interval, setInterval] = useState("day");
-	const [threshold, setThreshold] = useState(1);
+	const [threshold, setThreshold] = useState(0.02);
+	const [lookback, setLookback] = useState(20);
 	const [end, setEnd] = useState<number | null>(null);
 
 	useEffect(() => {
@@ -19,12 +20,14 @@ const MeanReversionInputs = ({ setOptions }: MeanReversionInputsProps) => {
 				interval: interval,
 				end: end,
 				threshold: threshold,
+				lookback: lookback,
 			});
 		} else {
 			setOptions({
 				start: start,
 				interval: interval,
 				threshold: threshold,
+				lookback: lookback,
 			});
 		}
 	}, [start, interval]);
@@ -63,7 +66,7 @@ const MeanReversionInputs = ({ setOptions }: MeanReversionInputsProps) => {
 					Minute
 				</label>
 			</div>
-			<div className="flex items-center">
+			<div className="flex flex-col items-center">
 				<label
 					htmlFor="threshold"
 					className="text-white text-md text-center"
@@ -73,16 +76,43 @@ const MeanReversionInputs = ({ setOptions }: MeanReversionInputsProps) => {
 				<input
 					type="number"
 					id="set-threshold"
-					min="0.5"
-					max="3"
+					min="0.01"
+					max="0.1"
 					step="0.1"
 					value={threshold}
 					className="border rounded-lg px-1 py-0.5 shadow-sm focus:ring-2 focus:ring-blue-400 focus:outline-none bg-gray-200 dark:bg-gray-600 ml-2 text-center"
 					onChange={(e) => {
 						setThreshold(
 							Math.max(
-								Math.min(parseFloat(e.target.value), 3),
-								0.5
+								Math.min(parseFloat(e.target.value), 0.1),
+								0.01
+							)
+						);
+					}}
+				/>
+
+				<label
+					htmlFor="set-lookback"
+					className="text-white text-md text-center mt-3"
+				>
+					Set Lookback:
+				</label>
+				<input
+					type="number"
+					id="set-lookback"
+					min="5"
+					max={interval == "day" ? "200" : "300"}
+					step="0.1"
+					value={lookback}
+					className="border rounded-lg px-1 py-0.5 shadow-sm focus:ring-2 focus:ring-blue-400 focus:outline-none bg-gray-200 dark:bg-gray-600 ml-2 text-center"
+					onChange={(e) => {
+						setLookback(
+							Math.max(
+								Math.min(
+									parseFloat(e.target.value),
+									interval == "day" ? 200 : 300
+								),
+								5
 							)
 						);
 					}}
@@ -94,4 +124,4 @@ const MeanReversionInputs = ({ setOptions }: MeanReversionInputsProps) => {
 	);
 };
 
-export default MeanReversionInputs;
+export default MomentumInputs;

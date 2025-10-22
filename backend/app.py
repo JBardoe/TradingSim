@@ -12,6 +12,7 @@ from datetime import datetime, timedelta
 from db_schema import db, User, add_user, dbinit, TrackedStock, track_stock, untrack_stock
 from strategies.trend_following import trend_following, long_trend_following
 from strategies.mean_reversion import mean_reversion
+from strategies.momentum_trading import momentum_trading
 
 app = Flask(__name__, static_folder="build", static_url_path="/")
 app.secret_key = "secretKey"
@@ -31,7 +32,7 @@ def resetDb():
 
 resetDb()#Database is reset when the app is run
 
-algs = ["Trend Following", "Mean Reversion"]
+algs = ["Trend Following", "Mean Reversion", "Momentum Trading"]
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -242,6 +243,8 @@ def run_algorithm():
 				(report, result) = long_trend_following(stock_code=stock_code, interval=interval, start_time = start_time, end_time=end_time)
 		case "Mean Reversion":
 			(report, result) = mean_reversion(stock_code=stock_code, interval=interval, start_time=start_time, threshold=float(options.get("threshold")), end_time=end_time)
+		case "Momentum Trading":
+			(report, result) = momentum_trading(stock_code=stock_code, interval=interval, start_time=start_time, end_time=end_time)
 		case _:
 			return jsonify({"error": "Unknown Algorithm"}), 400
 	

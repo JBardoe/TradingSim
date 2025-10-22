@@ -1,6 +1,7 @@
 import type { JSX } from "react";
 import TrendFollowingInputs from "./strategyinputs/TrendFollowingInputs";
 import MeanReversionInputs from "./strategyinputs/MeanReversionInputs";
+import MomentumInputs from "./strategyinputs/MomentumInputs";
 
 interface StrategyInputProps {
 	strategy: string;
@@ -17,6 +18,7 @@ const StrategyInput = ({ strategy, setOptions }: StrategyInputProps) => {
 		"Mean Reversion",
 		<MeanReversionInputs setOptions={setOptions} />
 	);
+	inputs.set("Momentum Trading", <MomentumInputs setOptions={setOptions} />);
 
 	return <div>{inputs.get(strategy)}</div>;
 };
